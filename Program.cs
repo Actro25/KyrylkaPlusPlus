@@ -1,25 +1,25 @@
 ﻿using KyrylkaPlusPlus;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 class Program {
-
-    public struct Lexer {
-        private string value;
-        public Lexer(string value) {
-            this.value = value;
+    public static void showTokens(IEnumerable<Token> tokens)
+    {
+        int maxPad = 0;
+        foreach (var token in tokens)
+        {
+            maxPad = (token.kind.ToString().Length > maxPad) ? token.kind.ToString().Length : maxPad;
         }
-        public IEnumerable<Token> getTokens() {
-            TokenEnumerable tokens = new TokenEnumerable(value.ToArray());
-            while (tokens.MoveNext()) {
-                yield return tokens.Current;
-            }
+
+        foreach (var token in tokens)
+        {
+            Console.WriteLine(token.kind + new string(' ', maxPad - token.kind.ToString().Length) + "\t -> \t" + $"'{token.value}'");
         }
     }
-
     public static void Main() {
-        Lexer lex = new Lexer("35 + 25");
-        var data = lex.getTokens();
-        foreach (var item in data) {
-            Console.WriteLine(item.kind);
-        }
+        Lexer lex = new Lexer("30 + 21 - () / and + AND or OR o D");
+        var data = lex.GetTokens();
+        showTokens(data);
     }
+
+
 }
