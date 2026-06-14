@@ -44,7 +44,7 @@ namespace KyrylkaPlusPlus
 
                 wholeToken.Append(tokenFirst.value);
 
-                if (tokenFirst.kind is Token.KindOfToken.Plus or Token.KindOfToken.Minus or Token.KindOfToken.Slash or Token.KindOfToken.Star)
+                if (isSpecialSingleLetter(ref tokenFirst.kind))
                     return tokenFirst;
 
                 Token tokenSecond = Current();
@@ -60,14 +60,41 @@ namespace KyrylkaPlusPlus
 
 
                 var returnToken = new Token { value = wholeToken.ToString(), kind = tokenFirst.kind };
-                if (returnToken.value.Length > 1 && returnToken.kind == Token.KindOfToken.Letter)
-                    returnToken.kind = Token.KindOfToken.Letters;
+
+                if (returnToken.kind is Token.KindOfToken.Letters or Token.KindOfToken.Letter)
+                    returnToken.kind = specialWords(returnToken.value);
 
                 return returnToken;
             }
             catch (IndexOutOfRangeException)
             {
                 throw new InvalidOperationException("Enumerator is out of bounds.");
+            }
+        }
+
+        private bool isSpecialSingleLetter(ref Token.KindOfToken kind) {
+            switch (kind) {
+                case Token.KindOfToken.Plus:
+                    return true;
+                case Token.KindOfToken.Minus:
+                    return true;
+                case Token.KindOfToken.Star:
+                    return true;
+                case Token.KindOfToken.Slash:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private Token.KindOfToken specialWords(string word) {
+            switch (word) {
+                case "AND" or "and":
+                    return Token.KindOfToken.AND;
+                case "OR" or "or":
+                    return Token.KindOfToken.OR;
+                default:
+                    return (word.Length > 1) ? Token.KindOfToken.Letters : Token.KindOfToken.Letter;
             }
         }
 

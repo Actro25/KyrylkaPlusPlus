@@ -16,7 +16,7 @@ class Program {
         }
     }
     public static void Main() {
-        Lexer lex = new Lexer("30 + 21 - () / and + AND or OR o D");
+        Lexer lex = new Lexer("30 + 21 - () / and + AND or OR o D KIRIL AnD ANDRA");
         var data = lex.GetTokens();
         showTokens(data);
     }
